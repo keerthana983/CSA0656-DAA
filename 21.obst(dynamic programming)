@@ -1,0 +1,51 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Function to calculate binomial coefficient using dynamic programming
+int binomialCoefficient(int n, int k) {
+    // Allocate memory for the DP table
+    int **C = (int **)malloc((n + 1) * sizeof(int *));
+    for (int i = 0; i <= n; i++) {
+        C[i] = (int *)malloc((k + 1) * sizeof(int));
+    }
+
+    // Compute binomial coefficients in a bottom-up manner
+    for (int i = 0; i <= n; i++) {
+        for (int j = 0; j <= k; j++) {
+            // Base cases
+            if (j == 0 || j == i) {
+                C[i][j] = 1;
+            } else {
+                C[i][j] = C[i - 1][j - 1] + C[i - 1][j];
+            }
+        }
+    }
+
+    // Result is in C[n][k]
+    int result = C[n][k];
+
+    // Free allocated memory
+    for (int i = 0; i <= n; i++) {
+        free(C[i]);
+    }
+    free(C);
+
+    return result;
+}
+
+int main() {
+    int n, k;
+
+    printf("Enter n and k (n >= k): ");
+    scanf("%d %d", &n, &k);
+
+    if (k > n || n < 0 || k < 0) {
+        printf("Invalid input. Ensure that n >= k and n, k are non-negative.\n");
+        return 1;
+    }
+
+    int result = binomialCoefficient(n, k);
+    printf("Binomial Coefficient C(%d, %d) = %d\n", n, k, result);
+
+    return 0;
+}
